@@ -47,7 +47,7 @@ Starting with Java 8, the library was folded into the core JDK, with very few mo
 
 
 <meta itemprop="dateModified" content="2016-04-13T02:26:00&#43;00:00" />
-<meta itemprop="wordCount" content="641">
+<meta itemprop="wordCount" content="632">
 
 
 
@@ -113,32 +113,31 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 
-// If you have a date without time information, use a LocalDate.  
-// e.g. someone's birthday
+// If you have a date without time information, use a LocalDate. e.g. someone's birthday
 LocalDate localDate = new LocalDate(2016, 4, 12)
 println localDate.toString()  // 2016-04-12
 
 // If you need to include time in the date, use ZonedDateTime
 ZonedDateTime zdt = ZonedDateTime.now() 
 
-// when formatting a ZonedDateTime for API communication, 
-// you'll typically use the DateTimeFormatter.ISO_INSTANT format
-println zdt.format(DateTimeFormatter.ISO_INSTANT)  
+// when formatting a ZonedDateTime for API communication, you'll typically use the DateTimeFormatter.ISO_INSTANT format
+println zdt.format(DateTimeFormatter.ISO_INSTANT)
 // 2016-04-12T19:20:45.539Z
 
 // some more examples of formatters
-println zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)  
+println zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 // 2016-04-12T14:20:45.539
 
-println zdt.format(DateTimeFormatter.RFC_1123_DATE_TIME)   
+println zdt.format(DateTimeFormatter.RFC_1123_DATE_TIME)
 // Tue, 12 Apr 2016 14:20:45 -0500
 
-println zdt.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)  
+println zdt.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
 // 2016-04-12T14:20:45.539-05:00[America/Chicago]
 
 // you can also create a custom formatter
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;MMM dd yyyy GG&quot;)
-println zdt.format(formatter)  // Apr 12 2016 AD
+println zdt.format(formatter)
+// Apr 12 2016 AD
 </code></pre>
 
 <h4 id="date-manipulation-is-fluent-and-intuitive">Date manipulation is fluent and intuitive.</h4>
@@ -150,27 +149,27 @@ LocalDate localDate = LocalDate.now()
 println localDate 
 // 2016-04-12
 
-println localDate.plusMonths(1).withDayOfMonth(1) 
+println localDate.plusMonths(1).withDayOfMonth(1)
 // 2016-05-01
 
-println localDate.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()) 
+println localDate.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth())
 // 2016-03-31
 </code></pre>
 
 <h4 id="prefer-to-work-in-utc-if-you-can-logs-database-timestamps-consistency-helps-avoid-mistakes">Prefer to work in UTC if you can - logs, database timestamps…consistency helps avoid mistakes.</h4>
 
-<p>In a startup class:
-<code>TimeZone.setDefault(TimeZone.getTimeZone(&quot;UTC&quot;))</code>
-or as a JVM flag:
-<code>-Duser.timezone=UTC</code></p>
+<p>In a startup class: <code>TimeZone.setDefault(TimeZone.getTimeZone(&quot;UTC&quot;))</code><br />
+or as a JVM flag: <code>-Duser.timezone=UTC</code></p>
 
 <h4 id="when-working-with-a-point-in-time-always-be-aware-of-timezone">When working with a point in time, always be aware of timezone!!!!</h4>
 
 <p>Even when working with objects like LocalDate, you must be timezone aware if you’re using a point-in-time operation. And by point-in-time, 99.273% of the time I’m referring to the now() method.
-For example, given the following scenario:
-- The default JVM timezone is <code>UTC</code>.
-- At <code>2016-04-12 3:10 PM</code> in <code>America/Chicago</code> (which is GMT-6), a call to
-println <code>LocalDate.now()</code> will result in <code>2016-04-12</code>.</p>
+For example, given the following scenario:</p>
+
+<ul>
+<li>The default JVM timezone is <code>UTC</code>.</li>
+<li>At <code>2016-04-12 3:10 PM</code> in <code>America/Chicago</code> (which is GMT-6), a call to println <code>LocalDate.now()</code> will result in <code>2016-04-12</code>.</li>
+</ul>
 
 <p>But at <code>2016-04-12 6:10 PM</code> in <code>America/Chicago</code>, the same call will result in <code>2016-04-13</code>.</p>
 
@@ -180,12 +179,38 @@ println <code>LocalDate.now()</code> will result in <code>2016-04-12</code>.</p>
 
 <h4 id="further-reading">Further Reading</h4>
 
-<p>The <a href="https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html">java.time javadocs</a> are actually really good, so read them for more detailed information. Wrapping up the whirlwind tour, here’s a quick table to help get you started with a few objects and their example uses:
-Object || Example Usage and Notes
-LocalDate | Birthday, Contract date where no time or timezone is needed
-ZonedDateTime | Most points in time, like some startDateTime, endDateTime
-YearMonth   | When you only want to work with a year/month combination. Less commonly used, but handy for date comparisons if you don’t want granularity to the day. e.g. Credit Card Expiration Month
-LocalTime   | e.g. Chris’s hardware store opens at 8 am. This date is irrespective of timezone (i.e. you wouldn’t change the opening time when daylight savings rolls around.)</p>
+<p>The <a href="https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html">java.time javadocs</a> are actually really good, so read them for more detailed information. Wrapping up the whirlwind tour, here’s a quick table to help get you started with a few objects and their example uses:</p>
+
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Example Usage and Notes</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>LocalDate</td>
+<td>Birthday, Contract date where no time or timezone is needed</td>
+</tr>
+
+<tr>
+<td>ZonedDateTime</td>
+<td>Most points in time, like some startDateTime, endDateTime</td>
+</tr>
+
+<tr>
+<td>YearMonth</td>
+<td>When you only want to work with a year/month combination. Less commonly used, but handy for date comparisons if you don’t want granularity to the day. e.g. Credit Card Expiration Month</td>
+</tr>
+
+<tr>
+<td>LocalTime</td>
+<td>e.g. Chris’s hardware store opens at 8 am. This date is irrespective of timezone (i.e. you wouldn’t change the opening time when daylight savings rolls around.)</td>
+</tr>
+</tbody>
+</table>
 
                 </section>
             </article>

@@ -34,32 +34,31 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 
-// If you have a date without time information, use a LocalDate.  
-// e.g. someone&#39;s birthday
+// If you have a date without time information, use a LocalDate. e.g. someone&#39;s birthday
 LocalDate localDate = new LocalDate(2016, 4, 12)
 println localDate.toString()  // 2016-04-12
 
 // If you need to include time in the date, use ZonedDateTime
 ZonedDateTime zdt = ZonedDateTime.now() 
 
-// when formatting a ZonedDateTime for API communication, 
-// you&#39;ll typically use the DateTimeFormatter.ISO_INSTANT format
-println zdt.format(DateTimeFormatter.ISO_INSTANT)  
+// when formatting a ZonedDateTime for API communication, you&#39;ll typically use the DateTimeFormatter.ISO_INSTANT format
+println zdt.format(DateTimeFormatter.ISO_INSTANT)
 // 2016-04-12T19:20:45.539Z
 
 // some more examples of formatters
-println zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)  
+println zdt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 // 2016-04-12T14:20:45.539
 
-println zdt.format(DateTimeFormatter.RFC_1123_DATE_TIME)   
+println zdt.format(DateTimeFormatter.RFC_1123_DATE_TIME)
 // Tue, 12 Apr 2016 14:20:45 -0500
 
-println zdt.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)  
+println zdt.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
 // 2016-04-12T14:20:45.539-05:00[America/Chicago]
 
 // you can also create a custom formatter
 DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&amp;quot;MMM dd yyyy GG&amp;quot;)
-println zdt.format(formatter)  // Apr 12 2016 AD
+println zdt.format(formatter)
+// Apr 12 2016 AD
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h4 id=&#34;date-manipulation-is-fluent-and-intuitive&#34;&gt;Date manipulation is fluent and intuitive.&lt;/h4&gt;
@@ -71,27 +70,27 @@ LocalDate localDate = LocalDate.now()
 println localDate 
 // 2016-04-12
 
-println localDate.plusMonths(1).withDayOfMonth(1) 
+println localDate.plusMonths(1).withDayOfMonth(1)
 // 2016-05-01
 
-println localDate.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()) 
+println localDate.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth())
 // 2016-03-31
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h4 id=&#34;prefer-to-work-in-utc-if-you-can-logs-database-timestamps-consistency-helps-avoid-mistakes&#34;&gt;Prefer to work in UTC if you can - logs, database timestamps…consistency helps avoid mistakes.&lt;/h4&gt;
 
-&lt;p&gt;In a startup class:
-&lt;code&gt;TimeZone.setDefault(TimeZone.getTimeZone(&amp;quot;UTC&amp;quot;))&lt;/code&gt;
-or as a JVM flag:
-&lt;code&gt;-Duser.timezone=UTC&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;In a startup class: &lt;code&gt;TimeZone.setDefault(TimeZone.getTimeZone(&amp;quot;UTC&amp;quot;))&lt;/code&gt;&lt;br /&gt;
+or as a JVM flag: &lt;code&gt;-Duser.timezone=UTC&lt;/code&gt;&lt;/p&gt;
 
 &lt;h4 id=&#34;when-working-with-a-point-in-time-always-be-aware-of-timezone&#34;&gt;When working with a point in time, always be aware of timezone!!!!&lt;/h4&gt;
 
 &lt;p&gt;Even when working with objects like LocalDate, you must be timezone aware if you’re using a point-in-time operation. And by point-in-time, 99.273% of the time I’m referring to the now() method.
-For example, given the following scenario:
-- The default JVM timezone is &lt;code&gt;UTC&lt;/code&gt;.
-- At &lt;code&gt;2016-04-12 3:10 PM&lt;/code&gt; in &lt;code&gt;America/Chicago&lt;/code&gt; (which is GMT-6), a call to
-println &lt;code&gt;LocalDate.now()&lt;/code&gt; will result in &lt;code&gt;2016-04-12&lt;/code&gt;.&lt;/p&gt;
+For example, given the following scenario:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The default JVM timezone is &lt;code&gt;UTC&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;At &lt;code&gt;2016-04-12 3:10 PM&lt;/code&gt; in &lt;code&gt;America/Chicago&lt;/code&gt; (which is GMT-6), a call to println &lt;code&gt;LocalDate.now()&lt;/code&gt; will result in &lt;code&gt;2016-04-12&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;But at &lt;code&gt;2016-04-12 6:10 PM&lt;/code&gt; in &lt;code&gt;America/Chicago&lt;/code&gt;, the same call will result in &lt;code&gt;2016-04-13&lt;/code&gt;.&lt;/p&gt;
 
@@ -101,12 +100,38 @@ println &lt;code&gt;LocalDate.now()&lt;/code&gt; will result in &lt;code&gt;2016
 
 &lt;h4 id=&#34;further-reading&#34;&gt;Further Reading&lt;/h4&gt;
 
-&lt;p&gt;The &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html&#34;&gt;java.time javadocs&lt;/a&gt; are actually really good, so read them for more detailed information. Wrapping up the whirlwind tour, here’s a quick table to help get you started with a few objects and their example uses:
-Object || Example Usage and Notes
-LocalDate | Birthday, Contract date where no time or timezone is needed
-ZonedDateTime | Most points in time, like some startDateTime, endDateTime
-YearMonth   | When you only want to work with a year/month combination. Less commonly used, but handy for date comparisons if you don’t want granularity to the day. e.g. Credit Card Expiration Month
-LocalTime   | e.g. Chris’s hardware store opens at 8 am. This date is irrespective of timezone (i.e. you wouldn’t change the opening time when daylight savings rolls around.)&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&#34;https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html&#34;&gt;java.time javadocs&lt;/a&gt; are actually really good, so read them for more detailed information. Wrapping up the whirlwind tour, here’s a quick table to help get you started with a few objects and their example uses:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Object&lt;/th&gt;
+&lt;th&gt;Example Usage and Notes&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;LocalDate&lt;/td&gt;
+&lt;td&gt;Birthday, Contract date where no time or timezone is needed&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;ZonedDateTime&lt;/td&gt;
+&lt;td&gt;Most points in time, like some startDateTime, endDateTime&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;YearMonth&lt;/td&gt;
+&lt;td&gt;When you only want to work with a year/month combination. Less commonly used, but handy for date comparisons if you don’t want granularity to the day. e.g. Credit Card Expiration Month&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;LocalTime&lt;/td&gt;
+&lt;td&gt;e.g. Chris’s hardware store opens at 8 am. This date is irrespective of timezone (i.e. you wouldn’t change the opening time when daylight savings rolls around.)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 </description>
     </item>
     
