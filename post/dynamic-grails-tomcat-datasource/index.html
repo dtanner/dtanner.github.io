@@ -51,7 +51,7 @@
 
 
 
-<meta itemprop="keywords" content="datasource,etcd,grails,java,java.time,joda-time," />
+<meta itemprop="keywords" content="codenarc,datasource,etcd,grails,groovy,java,java.time,joda-time,playhouse," />
 
 	    
 
@@ -160,7 +160,8 @@ Our application has the following attributes:</p>
 <ul>
 <li>It uses an inline plugin where we keep our domain classes and services.</li>
 <li>We use <a href="https://saltstack.com/">Salt</a> to manage our external config files</li>
-<li>It uses the <a href="https://github.com/bluesliverx/grails-external-config-reload">External Config Reload</a> plugin to allow us to dynamically update the app config when we change the config files.<br /></li>
+<li>It uses the <a href="https://github.com/bluesliverx/grails-external-config-reload">External Config Reload</a> plugin to allow us to dynamically update the app config when we change the config files.<br />
+<br /></li>
 </ul>
 
 <p>With those attributes, we initially implemented a hook into the TomcatDatasourceUtil by defining the onConfigChange event in our plugin&rsquo;s Config.groovy, like this:</p>
@@ -327,6 +328,20 @@ Yup - extremely well.  I actually expected the initial implementation to be a li
         
         <li>
             <a href="https://dtanner.github.io/post/dynamic-grails-tomcat-datasource/">Dynamic Grails Tomcat datasource configuration with Etcd<aside class="dates">Apr 30</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="https://dtanner.github.io/post/groovy-collect-vs-spread-dot-operator/">Groovy collect vs spread-dot operator<aside class="dates">Nov 15</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="https://dtanner.github.io/post/playhouse/">Playhouse<aside class="dates">Oct 16</aside></a>
         </li>
         
    

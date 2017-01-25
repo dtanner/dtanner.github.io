@@ -80,7 +80,8 @@ Our application has the following attributes:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;It uses an inline plugin where we keep our domain classes and services.&lt;/li&gt;
 &lt;li&gt;We use &lt;a href=&#34;https://saltstack.com/&#34;&gt;Salt&lt;/a&gt; to manage our external config files&lt;/li&gt;
-&lt;li&gt;It uses the &lt;a href=&#34;https://github.com/bluesliverx/grails-external-config-reload&#34;&gt;External Config Reload&lt;/a&gt; plugin to allow us to dynamically update the app config when we change the config files.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;It uses the &lt;a href=&#34;https://github.com/bluesliverx/grails-external-config-reload&#34;&gt;External Config Reload&lt;/a&gt; plugin to allow us to dynamically update the app config when we change the config files.&lt;br /&gt;
+&lt;br /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;With those attributes, we initially implemented a hook into the TomcatDatasourceUtil by defining the onConfigChange event in our plugin&amp;rsquo;s Config.groovy, like this:&lt;/p&gt;

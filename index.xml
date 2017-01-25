@@ -207,7 +207,8 @@ Our application has the following attributes:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;It uses an inline plugin where we keep our domain classes and services.&lt;/li&gt;
 &lt;li&gt;We use &lt;a href=&#34;https://saltstack.com/&#34;&gt;Salt&lt;/a&gt; to manage our external config files&lt;/li&gt;
-&lt;li&gt;It uses the &lt;a href=&#34;https://github.com/bluesliverx/grails-external-config-reload&#34;&gt;External Config Reload&lt;/a&gt; plugin to allow us to dynamically update the app config when we change the config files.&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;It uses the &lt;a href=&#34;https://github.com/bluesliverx/grails-external-config-reload&#34;&gt;External Config Reload&lt;/a&gt; plugin to allow us to dynamically update the app config when we change the config files.&lt;br /&gt;
+&lt;br /&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;With those attributes, we initially implemented a hook into the TomcatDatasourceUtil by defining the onConfigChange event in our plugin&amp;rsquo;s Config.groovy, like this:&lt;/p&gt;
@@ -331,6 +332,111 @@ class RemoteConfigService {
 
 &lt;p&gt;Does this actually work?
 Yup - extremely well.  I actually expected the initial implementation to be a little brittle (e.g. maybe needing a more robust etcd client), but it didn&amp;rsquo;t need any changes in the 6 months I watched it in production.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Groovy collect vs spread-dot operator</title>
+      <link>https://dtanner.github.io/post/groovy-collect-vs-spread-dot-operator/</link>
+      <pubDate>Sat, 15 Nov 2014 23:17:00 +0000</pubDate>
+      
+      <guid>https://dtanner.github.io/post/groovy-collect-vs-spread-dot-operator/</guid>
+      <description>&lt;p&gt;Yesterday I was doing some Groovy code cleanup with the wonderful &lt;a href=&#34;http://codenarc.sourceforge.net/&#34;&gt;CodeNarc&lt;/a&gt; static analysis tool. One of the violations it found was &lt;a href=&#34;http://codenarc.sourceforge.net/codenarc-rules-unnecessary.html#UnnecessaryCollectCall&#34;&gt;UnnecessaryCollectCall&lt;/a&gt;.
+The summary of the rule is &amp;ldquo;Some method calls to Object.collect(Closure) can be replaced with the spread operator.&amp;rdquo;
+e.g. Replace things.collect { it.name } with things*.name, or even things.name if what you&amp;rsquo;re after is a property.&lt;/p&gt;
+
+&lt;p&gt;But when I performed that refactoring and ran all the tests, some failed! Here&amp;rsquo;s why:&lt;/p&gt;
+
+&lt;p&gt;I made the mistake of assuming that the spread operator behavior is always identical to the collect method. For a &lt;strong&gt;non-null&lt;/strong&gt; collection, it is. e.g. The following code will produce the same result regardless of the technique you use:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def things = [ [a: 1], [a: 2] ]
+
+things.collect { it.a } // returns [1, 2]
+things*.a               // returns [1, 2]
+things.a                // returns [1, 2]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But if the collection you&amp;rsquo;re operating on is &lt;strong&gt;null&lt;/strong&gt;, the three techniques will result in different outcomes:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def things = null
+
+things.collect { it.a }   // returns []
+things*.a                 // returns null
+things.a                  // throws a NullPointerException
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What this means is that if you&amp;rsquo;re working with Collections that can potentially be null, you need to think about the consequences of the dot operations before using them. i.e. Don&amp;rsquo;t ever use the implicit spread operator (things.a) if the collection can be null. And only use *. if it&amp;rsquo;s ok for the result to be null.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;tl;dr;&lt;/em&gt; Explicit and implicit spread operations are great, but be aware that they are less forgiving than the collect method.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Playhouse</title>
+      <link>https://dtanner.github.io/post/playhouse/</link>
+      <pubDate>Sat, 16 Oct 2010 19:17:00 +0000</pubDate>
+      
+      <guid>https://dtanner.github.io/post/playhouse/</guid>
+      <description>&lt;p&gt;A few months ago, I promised Maria that I would get her and Daniela a playhouse for their birthdays.  I was originally going to buy them a little Step2 playhouse, which would&amp;rsquo;ve been totally fine.  But my good friend Rob, a skilled woodworker, convinced me that building a playhouse was the way to go.  I was a little tentative about the idea, since I hadn&amp;rsquo;t built a real structure before on my own, but he very generously offered to help (and with two kids of his own, meant that his wife Karen also very generously helped&amp;hellip;we still can&amp;rsquo;t thank them enough!)&lt;/p&gt;
+
+&lt;p&gt;So I bought this &lt;a href=&#34;https://dtanner.github.io/playhouse/playhouse-small.pdf&#34;&gt;plan&lt;/a&gt; (which I can&amp;rsquo;t find any more, so am including it here), made a few modifications, and off we went:&lt;/p&gt;
+
+&lt;p&gt;Starting with a pile of boards&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100828_IMG_3919.JPG&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;and a friend who know&amp;rsquo;s what he&amp;rsquo;s doing&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100829_IMG_3929.JPG&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;things started to take shape, and a lot of space!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100829_IMG_3931.JPG&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We passed the initial kid inspection&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100829_IMG_3933.JPG&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;and had lots of &amp;ldquo;help&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100829_IMG_3937.JPG&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The first wall goes up&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100904_IMG_1129.JPG&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And the playhouse is now fully operational.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100918_IMG_1257.JPG&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;But we realized that it absolutely has to be red.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100918_IMG_3944.JPG&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Much better color!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100919_IMG_1305.JPG&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I finished up the railing in the dark with a million mosquito friends.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100920_IMG_1307.JPG&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;One of the owner-operators.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/100929_DSC_4771.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Of course it needs a doorbell.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/101003_IMG_1369.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;and a solar-powered light for late night parties.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/101016_DSC_4783.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;With the trim, it&amp;rsquo;s pretty much done!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dtanner.github.io/playhouse/101016_DSC_4780.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://dtanner.github.io/playhouse/101016_DSC_4782.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 </description>
     </item>
     
