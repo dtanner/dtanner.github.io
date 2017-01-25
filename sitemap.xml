@@ -39,6 +39,15 @@
   </url>
   
   <url>
+    <loc>https://dtanner.github.io/categories/domain-names/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dtanner.github.io/post/domain-names-for-daughters/</loc>
+  </url>
+  
+  <url>
     <loc>https://dtanner.github.io/categories/etcd/</loc>
     <lastmod>2015-04-30T06:05:00+00:00</lastmod>
     <priority>0</priority>
