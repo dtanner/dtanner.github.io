@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://dtanner.github.io/about/</loc>
+    <lastmod>2017-01-26T20:02:37+02:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://dtanner.github.io/post/groovy-is-still-better-than-java/</loc>
     <lastmod>2017-01-25T01:20:43-06:00</lastmod>
   </url>
