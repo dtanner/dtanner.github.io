@@ -51,7 +51,7 @@ When I first saw Venkat Subramaniam gliding through his beautiful java to groovy
 
 
 <meta itemprop="dateModified" content="2017-01-25T01:20:43-06:00" />
-<meta itemprop="wordCount" content="1373">
+<meta itemprop="wordCount" content="1467">
 
 
 
@@ -131,19 +131,19 @@ try {
 }
 </code></pre>
 
-<p>to this:
-<code>new File(&quot;file.txt&quot;).eachLine { println &quot;line = $it&quot; }</code></p>
+<p>to this:</p>
 
-<p><em>Look Ma, don&rsquo;t even need triple-tick markdown around that code!</em></p>
+<pre><code>new File(&quot;file.txt&quot;).eachLine { println &quot;line = $it&quot; }
+</code></pre>
 
-<p>That got me hooked.</p>
+<p><em>Look Ma, a one-liner!</em> That got me hooked.</p>
 
 <p>The <strong>biggest</strong> thing though, which I&rsquo;ve grown to appreciate even more over the years, is the <a href="http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Collection.html">Collection</a> interface. The intrinsic power it gives to collection-like objects is immense.  And hey, c&rsquo;mon over here <a href="http://groovy-lang.org/groovy-dev-kit.html#_iterating_on_maps">Map</a> - you&rsquo;re iterable too as far as we&rsquo;re concerned.</p>
 
 <p>There&rsquo;s basic stuff like <code>10.times { println it }</code>, and
 <code>someCollection.each { println it }</code>, which shaves a few lines of code from the existing java iteration techniques.</p>
 
-<p>Then there&rsquo;s commonly useful but more powerful improvements like <code>collect()</code>, where you iterate through a collection of things, creating a new collection based on a function. e.g. going from:</p>
+<p>Then there&rsquo;s commonly useful but more powerful improvements like <code>collect()</code>, where you iterate through a collection of things, creating a new collection based on a function. e.g. going from this pre-Java 8 code:</p>
 
 <pre><code>List&lt;Integer&gt; input = Arrays.asList(1, 2, 3);
 List results = new ArrayList();
@@ -158,7 +158,7 @@ for (Iterator&lt;Integer&gt; iterator = input.iterator(); iterator.hasNext(); ) 
 <pre><code>List results = [1, 2, 3].collect { it * 2 }
 </code></pre>
 
-<p>Filtering a collection is a similar improvement, where you start with a collection and filter it down based on a condition applied to each element.  e.g. going from:</p>
+<p>Filtering a collection is a similar improvement, where you start with a collection and filter it down based on a condition applied to each element.  e.g. going from (once again, pre-Java 8):</p>
 
 <pre><code>List&lt;Integer&gt; input = Arrays.asList(1, 2, 3, 4);
 List evenNumbers = new ArrayList();
@@ -180,7 +180,23 @@ for (Iterator&lt;Integer&gt; iterator = input.iterator(); iterator.hasNext(); ) 
 <p>Lispers may smugly remark, &ldquo;oh, how cute; you&rsquo;re learning functional programming&rdquo;.  And they&rsquo;re right!
 The pragmatic functional features of Groovy provide a gentle transition from object-oriented to more pure functional programming for many developers.</p>
 
-<p>Fast-forward a bunch of years, and things have changed. Even though Java hasn&rsquo;t been progressing as fast as many would like, they&rsquo;ve made some significant changes to include features introduced by Groovy, and pioneered by other languages.</p>
+<p>Fast-forward a bunch of years, and things have changed. Even though Java hasn&rsquo;t been progressing as fast as many would like, they&rsquo;ve made some significant changes to include features introduced by Groovy, and pioneered by other languages; most notably lambdas and streaming.  For example, the above Java examples can now be written like this:</p>
+
+<pre><code>// read each line in a file
+try (Stream&lt;String&gt; stream = Files.lines(Paths.get(&quot;file.txt&quot;))) {
+    stream.forEach(System.out::println);
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// collect
+List&lt;Integer&gt; results = Stream.of(1, 2, 3).map(v -&gt; v * 2).collect(Collectors.toList());  
+
+// filter
+List&lt;Integer&gt; evenNumbers = Stream.of(1, 2, 3, 4).filter(v -&gt; v % 2 == 0).collect(Collectors.toList());
+</code></pre>
+
+<p>&hellip;<strong>much</strong> improved over the old Java syntax. Still not as concise or elegant as Groovy, but fairly close.</p>
 
 <h3 id="back-to-the-original-question">Back to the original question&hellip;</h3>
 
@@ -188,10 +204,10 @@ The pragmatic functional features of Groovy provide a gentle transition from obj
 
 <p>It started with a little bake-off we&rsquo;re doing to compare a couple different application design techniques.  I wrote a small service in plain groovy, and my teammate wrote one in java.  Our apps are running in a container that will have their environment-specific overrides specified as environment variables.  I strongly prefer typed configuration objects in the code, rather than things like generic Maps or JSON objects.  Ten minutes of googling, and I couldn&rsquo;t find a utility to let me override typed configuration object values with environment variables.  So I created this project in groovy: <a href="https://github.com/dtanner/env-config-loader-groovy">https://github.com/dtanner/env-config-loader-groovy</a></p>
 
-<p>My teammate initially used the <a href="https://github.com/typesafehub/config">typesafe/config</a> project to do his configuration overrides.  But its environment overrides are a little verbose IMO, we didn&rsquo;t need its additional complexity, and it would make our usages consistent.
-So I created a pure java version of the tool as well: <a href="https://github.com/dtanner/env-override">https://github.com/dtanner/env-override</a></p>
+<p>My teammate initially used the <a href="https://github.com/typesafehub/config">typesafe/config</a> project to do his configuration overrides.  But its environment overrides are a little verbose IMO, we didn&rsquo;t need its additional complexity, and solving the same problem with different tools adds to the maintenance costs for the team.
+So I created a pure java version of the env-config-loader tool as well: <a href="https://github.com/dtanner/env-override">https://github.com/dtanner/env-override</a></p>
 
-<p>I wasn&rsquo;t very excited about writing the java tool, but:</p>
+<p>I wasn&rsquo;t excited about writing the java version, but:</p>
 
 <ul>
 <li>A pure java implementation can be used by other JVM languages</li>
@@ -286,7 +302,7 @@ envVars.keySet().stream().filter(envKey -&gt;
 <p>There are other advantages to using Groovy, for example listed by Peter Ledbrook <a href="http://blog.cacoethes.co.uk/groovyandgrails/groovy-in-light-of-java-8">here</a>.
 As to the question of when it&rsquo;s appropriate to write Java over Groovy, there&rsquo;s really only a couple reasons in my opinion:</p>
 
-<p>The first is the reason I just insulted the java code I wrote, but intend to promote that and deprecate the groovy version; it&rsquo;s a library that can be run on any JVM language.  The Groovy library is limited to Groovy usage.  It&rsquo;s worth it for that situation.</p>
+<p>The first is the reason I just insulted the java code I wrote, but still intend to promote and deprecate the groovy version; it&rsquo;s a library that can be run on any JVM language.  The Groovy library is limited to Groovy usage.  It&rsquo;s worth it for that situation.</p>
 
 <p>The second is if you&rsquo;re using a framework or library that doesn&rsquo;t let you easily use Groovy.  If you&rsquo;re going down this path, I think you&rsquo;ll know it when you see it.  e.g. If you want to write a lot of RxJava, you might want to stick with Java, at least for now.</p>
 

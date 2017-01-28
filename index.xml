@@ -46,19 +46,19 @@ try {
 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;to this:
-&lt;code&gt;new File(&amp;quot;file.txt&amp;quot;).eachLine { println &amp;quot;line = $it&amp;quot; }&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;to this:&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;Look Ma, don&amp;rsquo;t even need triple-tick markdown around that code!&lt;/em&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;new File(&amp;quot;file.txt&amp;quot;).eachLine { println &amp;quot;line = $it&amp;quot; }
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;That got me hooked.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Look Ma, a one-liner!&lt;/em&gt; That got me hooked.&lt;/p&gt;
 
 &lt;p&gt;The &lt;strong&gt;biggest&lt;/strong&gt; thing though, which I&amp;rsquo;ve grown to appreciate even more over the years, is the &lt;a href=&#34;http://docs.groovy-lang.org/latest/html/groovy-jdk/java/util/Collection.html&#34;&gt;Collection&lt;/a&gt; interface. The intrinsic power it gives to collection-like objects is immense.  And hey, c&amp;rsquo;mon over here &lt;a href=&#34;http://groovy-lang.org/groovy-dev-kit.html#_iterating_on_maps&#34;&gt;Map&lt;/a&gt; - you&amp;rsquo;re iterable too as far as we&amp;rsquo;re concerned.&lt;/p&gt;
 
 &lt;p&gt;There&amp;rsquo;s basic stuff like &lt;code&gt;10.times { println it }&lt;/code&gt;, and
 &lt;code&gt;someCollection.each { println it }&lt;/code&gt;, which shaves a few lines of code from the existing java iteration techniques.&lt;/p&gt;
 
-&lt;p&gt;Then there&amp;rsquo;s commonly useful but more powerful improvements like &lt;code&gt;collect()&lt;/code&gt;, where you iterate through a collection of things, creating a new collection based on a function. e.g. going from:&lt;/p&gt;
+&lt;p&gt;Then there&amp;rsquo;s commonly useful but more powerful improvements like &lt;code&gt;collect()&lt;/code&gt;, where you iterate through a collection of things, creating a new collection based on a function. e.g. going from this pre-Java 8 code:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;List&amp;lt;Integer&amp;gt; input = Arrays.asList(1, 2, 3);
 List results = new ArrayList();
@@ -73,7 +73,7 @@ for (Iterator&amp;lt;Integer&amp;gt; iterator = input.iterator(); iterator.hasNe
 &lt;pre&gt;&lt;code&gt;List results = [1, 2, 3].collect { it * 2 }
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Filtering a collection is a similar improvement, where you start with a collection and filter it down based on a condition applied to each element.  e.g. going from:&lt;/p&gt;
+&lt;p&gt;Filtering a collection is a similar improvement, where you start with a collection and filter it down based on a condition applied to each element.  e.g. going from (once again, pre-Java 8):&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;List&amp;lt;Integer&amp;gt; input = Arrays.asList(1, 2, 3, 4);
 List evenNumbers = new ArrayList();
@@ -95,7 +95,23 @@ for (Iterator&amp;lt;Integer&amp;gt; iterator = input.iterator(); iterator.hasNe
 &lt;p&gt;Lispers may smugly remark, &amp;ldquo;oh, how cute; you&amp;rsquo;re learning functional programming&amp;rdquo;.  And they&amp;rsquo;re right!
 The pragmatic functional features of Groovy provide a gentle transition from object-oriented to more pure functional programming for many developers.&lt;/p&gt;
 
-&lt;p&gt;Fast-forward a bunch of years, and things have changed. Even though Java hasn&amp;rsquo;t been progressing as fast as many would like, they&amp;rsquo;ve made some significant changes to include features introduced by Groovy, and pioneered by other languages.&lt;/p&gt;
+&lt;p&gt;Fast-forward a bunch of years, and things have changed. Even though Java hasn&amp;rsquo;t been progressing as fast as many would like, they&amp;rsquo;ve made some significant changes to include features introduced by Groovy, and pioneered by other languages; most notably lambdas and streaming.  For example, the above Java examples can now be written like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;// read each line in a file
+try (Stream&amp;lt;String&amp;gt; stream = Files.lines(Paths.get(&amp;quot;file.txt&amp;quot;))) {
+    stream.forEach(System.out::println);
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// collect
+List&amp;lt;Integer&amp;gt; results = Stream.of(1, 2, 3).map(v -&amp;gt; v * 2).collect(Collectors.toList());  
+
+// filter
+List&amp;lt;Integer&amp;gt; evenNumbers = Stream.of(1, 2, 3, 4).filter(v -&amp;gt; v % 2 == 0).collect(Collectors.toList());
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip;&lt;strong&gt;much&lt;/strong&gt; improved over the old Java syntax. Still not as concise or elegant as Groovy, but fairly close.&lt;/p&gt;
 
 &lt;h3 id=&#34;back-to-the-original-question&#34;&gt;Back to the original question&amp;hellip;&lt;/h3&gt;
 
@@ -103,10 +119,10 @@ The pragmatic functional features of Groovy provide a gentle transition from obj
 
 &lt;p&gt;It started with a little bake-off we&amp;rsquo;re doing to compare a couple different application design techniques.  I wrote a small service in plain groovy, and my teammate wrote one in java.  Our apps are running in a container that will have their environment-specific overrides specified as environment variables.  I strongly prefer typed configuration objects in the code, rather than things like generic Maps or JSON objects.  Ten minutes of googling, and I couldn&amp;rsquo;t find a utility to let me override typed configuration object values with environment variables.  So I created this project in groovy: &lt;a href=&#34;https://github.com/dtanner/env-config-loader-groovy&#34;&gt;https://github.com/dtanner/env-config-loader-groovy&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;My teammate initially used the &lt;a href=&#34;https://github.com/typesafehub/config&#34;&gt;typesafe/config&lt;/a&gt; project to do his configuration overrides.  But its environment overrides are a little verbose IMO, we didn&amp;rsquo;t need its additional complexity, and it would make our usages consistent.
-So I created a pure java version of the tool as well: &lt;a href=&#34;https://github.com/dtanner/env-override&#34;&gt;https://github.com/dtanner/env-override&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;My teammate initially used the &lt;a href=&#34;https://github.com/typesafehub/config&#34;&gt;typesafe/config&lt;/a&gt; project to do his configuration overrides.  But its environment overrides are a little verbose IMO, we didn&amp;rsquo;t need its additional complexity, and solving the same problem with different tools adds to the maintenance costs for the team.
+So I created a pure java version of the env-config-loader tool as well: &lt;a href=&#34;https://github.com/dtanner/env-override&#34;&gt;https://github.com/dtanner/env-override&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;I wasn&amp;rsquo;t very excited about writing the java tool, but:&lt;/p&gt;
+&lt;p&gt;I wasn&amp;rsquo;t excited about writing the java version, but:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;A pure java implementation can be used by other JVM languages&lt;/li&gt;
@@ -201,7 +217,7 @@ envVars.keySet().stream().filter(envKey -&amp;gt;
 &lt;p&gt;There are other advantages to using Groovy, for example listed by Peter Ledbrook &lt;a href=&#34;http://blog.cacoethes.co.uk/groovyandgrails/groovy-in-light-of-java-8&#34;&gt;here&lt;/a&gt;.
 As to the question of when it&amp;rsquo;s appropriate to write Java over Groovy, there&amp;rsquo;s really only a couple reasons in my opinion:&lt;/p&gt;
 
-&lt;p&gt;The first is the reason I just insulted the java code I wrote, but intend to promote that and deprecate the groovy version; it&amp;rsquo;s a library that can be run on any JVM language.  The Groovy library is limited to Groovy usage.  It&amp;rsquo;s worth it for that situation.&lt;/p&gt;
+&lt;p&gt;The first is the reason I just insulted the java code I wrote, but still intend to promote and deprecate the groovy version; it&amp;rsquo;s a library that can be run on any JVM language.  The Groovy library is limited to Groovy usage.  It&amp;rsquo;s worth it for that situation.&lt;/p&gt;
 
 &lt;p&gt;The second is if you&amp;rsquo;re using a framework or library that doesn&amp;rsquo;t let you easily use Groovy.  If you&amp;rsquo;re going down this path, I think you&amp;rsquo;ll know it when you see it.  e.g. If you want to write a lot of RxJava, you might want to stick with Java, at least for now.&lt;/p&gt;
 
