@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://wittyginger.com/post/take-note/</loc>
+    <lastmod>2017-07-16T20:09:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://wittyginger.com/post/curl-saves-the-day/</loc>
     <lastmod>2017-07-15T13:09:00+00:00</lastmod>
   </url>
@@ -105,6 +110,12 @@
   </url>
   
   <url>
+    <loc>http://wittyginger.com/categories/memory-less/</loc>
+    <lastmod>2017-07-16T20:09:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://wittyginger.com/categories/networking/</loc>
     <lastmod>2017-07-15T13:09:00+00:00</lastmod>
     <priority>0</priority>
@@ -118,13 +129,19 @@
   
   <url>
     <loc>http://wittyginger.com/post/</loc>
-    <lastmod>2017-07-15T13:09:00+00:00</lastmod>
+    <lastmod>2017-07-16T20:09:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://wittyginger.com/categories/productivity/</loc>
+    <lastmod>2017-07-16T20:09:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://wittyginger.com/</loc>
-    <lastmod>2017-07-15T13:09:00+00:00</lastmod>
+    <lastmod>2017-07-16T20:09:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
