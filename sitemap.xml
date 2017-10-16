@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://wittyginger.com/post/meteorologists-urged-to-stop-giving-100-percent/</loc>
+    <lastmod>2017-11-15T10:59:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>http://wittyginger.com/post/camp-lotto/</loc>
     <lastmod>2017-08-30T11:09:00+00:00</lastmod>
   </url>
@@ -71,6 +76,12 @@
   <url>
     <loc>http://wittyginger.com/categories/curl/</loc>
     <lastmod>2017-07-15T13:09:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://wittyginger.com/categories/data-science/</loc>
+    <lastmod>2017-11-15T10:59:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -163,7 +174,7 @@
   
   <url>
     <loc>http://wittyginger.com/post/</loc>
-    <lastmod>2017-08-30T11:09:00+00:00</lastmod>
+    <lastmod>2017-11-15T10:59:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -175,13 +186,19 @@
   
   <url>
     <loc>http://wittyginger.com/</loc>
-    <lastmod>2017-08-30T11:09:00+00:00</lastmod>
+    <lastmod>2017-11-15T10:59:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://wittyginger.com/categories/water/</loc>
     <lastmod>2017-08-11T13:09:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://wittyginger.com/categories/weather/</loc>
+    <lastmod>2017-11-15T10:59:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
